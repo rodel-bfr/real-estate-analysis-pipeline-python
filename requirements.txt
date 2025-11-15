@@ -6,3 +6,4 @@ scipy
 selenium
 beautifulsoup4
 requests
+python-docx

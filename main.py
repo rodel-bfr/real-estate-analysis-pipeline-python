@@ -11,18 +11,13 @@ def run_analysis():
     print("Note: Loading data from pre-saved CSV files in the /data folder.\n")
 
     # --- Step 1: Load the Cleaned Data ---
-    
-    # --- MODIFICATION ---
-    # This now matches the new __init__ in DataFilter
-    # We are telling it to read from the 'data' folder
     filter_params = {
         'short_name_list': SHORT_NAME_LIST,
         'county_list': COUNTY_LIST, 
         'city_list': CITY_LIST,
-        'data_path': 'data'  # <-- This is the important change
+        'data_path': 'data'
     }
 
-    # Instantiate the filterer and load the cleaned data
     data_filter = DataFilter(filter_params)
     
     try:
@@ -40,11 +35,20 @@ def run_analysis():
         'city_list': CITY_LIST,
     }
 
-    print("Running analysis and generating plots (saved to /images)...")
     analyzer = RentalAnalyzer(analyzer_params)
-    analyzer.analyzer()
+    
+    # Step 2a: Run all calculations and generate plots
+    print("Running analysis and generating plots (saved to /images)...")
+    analyzer.analyzer() 
+    
+    # Step 2b: Print the results to the console
+    print("\n--- CONSOLE ANALYSIS REPORT ---")
+    analyzer.print_console_report()
+    
+    # Step 2c: Generate the Word document report
+    analyzer.generate_word_report("Analysis_Report.docx")
 
-    print("\nAnalysis complete. Check the /images folder for plots.")
+    print(f"\nAnalysis complete. Check /images for plots and /reports for the .docx report.")
 
 if __name__ == "__main__":
     run_analysis()

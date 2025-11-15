@@ -20,3 +20,7 @@ Thumbs.db
 # Generated output folders
 /images/
 /data_filtered_demo/
+
+# MS Office files
+/reports/
+*.docx
