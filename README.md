@@ -41,7 +41,7 @@ To make the project reproducible, this repository includes both the raw and the 
 
 ## 📂 Project Structure
 
-## 📦 Data Folders Explained
+#### 📦 Data Folders Explained
 This project contains two sets of data to show the full "before and after" pipeline:
 
 * `/data_raw/`: Contains the two original, large CSV files (`sell_df.csv` and `rent_df.csv`) exactly as they were scraped. This is the "before" data.
