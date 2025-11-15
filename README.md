@@ -45,7 +45,7 @@ To make the project reproducible, this repository includes both the raw and the 
 This project contains two sets of data to show the full "before and after" pipeline:
 
 * `/data_raw/`: Contains the two original, large CSV files (`sell_df.csv` and `rent_df.csv`) exactly as they were scraped. This is the "before" data.
-* `/data/`: Contains the eight smaller, *cleaned* CSV files (`b_rent_df.csv`, `cj_sell_df.csv`, etc.). This is the "after" data, which was (conceptually) manually cleaned to remove outliers and errors. **The main analysis runs from this folder.**
+* `/data/`: Contains the eight smaller, *cleaned* CSV files (`b_rent_df.csv`, `cj_sell_df.csv`, etc.). This is the "after" dataset, which has been **preprocessed to remove outliers and correct clear data entry errors identified during exploratory analysis.** **The main analysis runs from this folder.**
 
 ```text
 real-estate-analysis-pipeline-python/
