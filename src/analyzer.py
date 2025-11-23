@@ -88,11 +88,11 @@ class RentalAnalyzer():
         sell_ax.set_title(f'{city} Sell (€/m²)')
         rent_ax.set_title(f'{city} Rent (€/m²)')
 
-        sell_counts, sell_bins, _ = sell_ax.hist(sell_df['price_per_sqm'], bins=15, edgecolor='black', linewidth=1)
+        _, sell_bins, _ = sell_ax.hist(sell_df['price_per_sqm'], bins=15, edgecolor='black', linewidth=1)
         sell_ticks = np.linspace(sell_bins[0], sell_bins[-1], num=15, endpoint=True)
         sell_ax.set_xticks(sell_ticks)
 
-        rent_counts, rent_bins, _ = rent_ax.hist(rent_df['price_per_sqm'], bins=15, edgecolor='black', linewidth=1)
+        _, rent_bins, _ = rent_ax.hist(rent_df['price_per_sqm'], bins=15, edgecolor='black', linewidth=1)
         rent_ticks = np.linspace(rent_bins[0], rent_bins[-1], num=15, endpoint=True)
         rent_ax.set_xticks(rent_ticks)
 
