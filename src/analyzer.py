@@ -85,8 +85,8 @@ class RentalAnalyzer():
 
         sell_ax = axs[0]
         rent_ax = axs[1]
-        sell_ax.set_title(f'{city} (Sell)')
-        rent_ax.set_title(f'{city} (Rent)')
+        sell_ax.set_title(f'{city} Sell (€/m²)')
+        rent_ax.set_title(f'{city} Rent (€/m²)')
 
         sell_counts, sell_bins, _ = sell_ax.hist(sell_df['price_per_sqm'], bins=15, edgecolor='black', linewidth=1)
         sell_ticks = np.linspace(sell_bins[0], sell_bins[-1], num=15, endpoint=True)
@@ -103,7 +103,7 @@ class RentalAnalyzer():
         print(f"Saved plot to {plot_filename}")
         plt.close(fig) 
     
-    # Estimate monthly return based on selling and renting prices
+    # Estimate monthly return based on selling and renting prices (Returns Percentage)
     def _estimate_monthly_return(self, selling_price_per_sqm, renting_price_per_sqm, property_value=100000):
         property_size = property_value / selling_price_per_sqm
         monthly_rental_income = renting_price_per_sqm * property_size
@@ -111,16 +111,19 @@ class RentalAnalyzer():
         return monthly_return
 
     # HELPER METHOD
-    # This method holds the text block
     def _build_city_report_string(self, city, i, lower_estimate, upper_estimate):
         """Builds the formatted text block for a city's analysis."""
         sell = self.stats_dict['sell']
         rent = self.stats_dict['rent']
         
+        # Calculate Annual Yields based on Monthly %
+        annual_lower = lower_estimate * 12
+        annual_upper = upper_estimate * 12
+        
         text = f"""
 Based on the data from storia.ro, the following observations can be made for {city}:
 
-1. Analysis of property listed for sale:
+1. Analysis of properties listed for sale:
 
 Sample Size: {sell['sample_size'][i]} estates listed for sale.
 Average Selling Price per Square Meter: {sell['mean'][i]:.2f}
@@ -129,11 +132,9 @@ Most Common Selling Price per Square Meter: {sell['mode'][i][0]}
 Skewness: {sell['skewness'][i]:.2f}
 Standard deviation: {sell['standard_deviation'][i]:.2f}
 Coefficient of Variation: {sell['coefficient_of_variation'][i]:.2f}
-Confidence intervals: {sell['conf_level'][i]*100}% confidence that the true average price of a 
-square meter is between {sell['lower_bound'][i]:.2f} - {sell['upper_bound'][i]:.2f}
+Confidence intervals: {sell['conf_level'][i]*100}% confidence that the true average price of a square meter is between {sell['lower_bound'][i]:.2f} - {sell['upper_bound'][i]:.2f}
 
-
-2. Analysis of property listed for rent:
+2. Analysis of properties listed for rent:
 
 Sample Size: {rent['sample_size'][i]} estates listed for rent.
 Average Renting Price per Square Meter: {rent['mean'][i]:.2f}
@@ -142,19 +143,22 @@ Most Common Renting Price per Square Meter: {rent['mode'][i][0]}
 Skewness: {rent['skewness'][i]:.2f}
 Standard deviation: {rent['standard_deviation'][i]:.2f}
 Coefficient of Variation: {rent['coefficient_of_variation'][i]:.2f}
-Confidence intervals: {rent['conf_level'][i]*100}% confidence that the true average price of a 
-square meter is between {rent['lower_bound'][i]:.2f} - {rent['upper_bound'][i]:.2f}
+Confidence intervals: {rent['conf_level'][i]*100}% confidence that the true average price of a square meter is between {rent['lower_bound'][i]:.2f} - {rent['upper_bound'][i]:.2f}
 
-For every euro spent buying a square meter in {city}, we can expect a monthly income from rent between
-{lower_estimate:.2f} and {upper_estimate:.2f} euro.
+3. Investment Metrics
+
+For every 100 Euro spent buying a square meter in {city}, you can expect a monthly income from rent between {lower_estimate:.2f} and {upper_estimate:.2f} Euro.
+
+This translates to an **Annual Gross Rental Yield** between {annual_lower:.2f}% and {annual_upper:.2f}%.
+
+*Note on Net Income: This calculation is "Gross" (before expenses). To find your actual take-home money, you would need to deduct property taxes, income tax (CASS if applicable), and maintenance costs.*
 """
         return text
 
-    # This method performs calculations and saves results to the class
+    # Main analysis method
     def analyzer(self):
         """
-        Runs all calculations, generates plots, and stores results
-        in self.analysis_data and self.city_ranking.
+        Runs all calculations, generates plots, and stores results in self.analysis_data and self.city_ranking.
         """
         self._get_stats_dict()
         sell_dfs = [df for df in self.df_list if 'sell' in df.name]
@@ -181,7 +185,6 @@ For every euro spent buying a square meter in {city}, we can expect a monthly in
         self.city_ranking = sorted(city_ranking_data, key=lambda x: x[1], reverse=True)
         print("Analysis and plot generation complete.") # Log to console
 
-    # METHOD for console output
     def print_console_report(self):
         """
         Prints the pre-calculated analysis results to the console.
@@ -193,12 +196,14 @@ For every euro spent buying a square meter in {city}, we can expect a monthly in
         for city in self.city_list:
             print(self.analysis_data[city])
         
-        print("\nRanking based on monthly rental income estimates:\n")
+        print("\n--- FINAL RANKING (Based on Annual Gross Rental Yield) ---\n")
         for rank, (city, lower, upper) in enumerate(self.city_ranking, start=1):
-            print(f"""{rank}. {city}: 
-The expected monthly income from rent for every euro spent is estimated to be between {lower:.2f} and {upper:.2f}.\n""")
+            annual_lower = lower * 12
+            annual_upper = upper * 12
+            print(f"{rank}. {city}:")
+            print(f"   Monthly Yield: {lower:.2f}% - {upper:.2f}%")
+            print(f"   Annual Yield:  {annual_lower:.2f}% - {annual_upper:.2f}%\n")
 
-    # This method presents data to the DOCX file
     def generate_word_report(self, report_filename="Romanian_Apartment_Analysis_Report.docx"):
         """
         Saves the pre-calculated results and plots to a Word document.
@@ -232,12 +237,27 @@ The expected monthly income from rent for every euro spent is estimated to be be
 
         # --- Add the final ranking to the Word doc ---
         doc.add_heading('Final Investment Ranking', level=1)
+        doc.add_paragraph("Ranking based on Annual Gross Rental Yield estimates:")
         
         for rank, (city, lower, upper) in enumerate(self.city_ranking, start=1):
-            rank_text = f"""{rank}. {city}: 
-The expected monthly income from rent for every euro spent is estimated to be between {lower:.2f} and {upper:.2f}.\n"""
-            doc.add_paragraph(rank_text)
+            annual_lower = lower * 12
+            annual_upper = upper * 12
+            
+            p = doc.add_paragraph()
+            runner = p.add_run(f"{rank}. {city}")
+            runner.bold = True
+            p.add_run(f"\n   Monthly Yield: {lower:.2f}% - {upper:.2f}%")
+            p.add_run(f"\n   Annual Yield:  {annual_lower:.2f}% - {annual_upper:.2f}%")
 
         # --- Save the document to the reports folder ---
-        doc.save(full_report_path)
-        print(f"Successfully saved Word report to: {full_report_path}")
+        # Retry loop to handle permission errors (e.g., file open in Word)
+        while True:
+            try:
+                doc.save(full_report_path)
+                print(f"Successfully saved Word report to: {full_report_path}")
+                break  # Success! Exit the loop.
+            except PermissionError:
+                print(f"\n⚠️  PERMISSION ERROR: Could not save to '{full_report_path}'.")
+                print("The file appears to be open in Microsoft Word or another program.")
+                input(">> Please CLOSE the file and press ENTER to try again... ")
+                print("Retrying save...")
