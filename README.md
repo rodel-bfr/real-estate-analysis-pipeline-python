@@ -6,7 +6,7 @@ The project scrapes, filters, and analyzes real estate data to determine the bes
 
 ---
 
-## ✨ Key Features
+## Key Features
 
 * **Web Scraping:** Includes the `EstateWebScraper` class (built with Selenium and BeautifulSoup) to demonstrate the data collection process.
 * **OOP Design:** Adheres to the DRY (Don't Repeat Yourself) principle by separating data calculation (`analyzer()`) from presentation (`print_console_report()`, `generate_word_report()`).
@@ -18,7 +18,7 @@ The project scrapes, filters, and analyzes real estate data to determine the bes
 
 ---
 
-## 🛠️ Technologies Used
+## Technologies Used
 
 * **Python 3.9**
 * **Data Manipulation:** Pandas, NumPy
@@ -29,7 +29,7 @@ The project scrapes, filters, and analyzes real estate data to determine the bes
 
 ---
 
-## 📸 Application Preview
+## Application Preview
 
 ### 1. Deep Dive: Statistical Breakdown (Sample Output)
 *(The script performs this detailed analysis for every city. Below is the actual output for **Bucuresti**, demonstrating the statistical rigor applied to the data.)*
@@ -99,9 +99,9 @@ The project scrapes, filters, and analyzes real estate data to determine the bes
 | ![Timisoara](https://github.com/user-attachments/assets/293081c2-2f69-469e-8e74-6032231adf14) | ![Iasi](https://github.com/user-attachments/assets/b82fea2b-68ae-45ba-8185-00f0d0fbc435) |
 ---
 
-## 📂 Project Structure
+## Project Structure
 
-#### 📦 Data Folders Explained
+#### Data Folders Explained
 This project contains two sets of data to show the full "before and after" pipeline:
 
 * `/data_raw/`: Contains the two original, large CSV files (`sell_df.csv` and `rent_df.csv`) exactly as they were scraped. This is the "before" data.
@@ -132,7 +132,7 @@ real-estate-analysis-pipeline-python/
 
 ---
 
-## 🎯 Technical Focus & Architecture
+## Technical Focus & Architecture
 
 This project functions as an **End-to-End Data Pipeline**, demonstrating the transition from raw unstructured web data to actionable financial insights. **The analysis is 100% reproducible** using the included raw datasets.
 
@@ -144,13 +144,13 @@ The system was explicitly designed to separate **Data Collection** (`src/scraper
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
-### 📋 Prerequisites
+### Prerequisites
 * **Python 3.9** or higher.
 * **Virtual Environment** (Recommended to avoid dependency conflicts).
 
-### 🔧 Installation
+### Installation
 **1. Clone the repository:**
 ```bash
 git clone https://github.com/rodel-bfr/real-estate-analysis-pipeline-python.git
@@ -171,7 +171,7 @@ source venv/bin/activate
 pip install -r requirements.txt
 ```
 
-### ▶️ How to Run
+### How to Run
 
 **1. Run the main analysis script:**
 
